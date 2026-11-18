@@ -31,7 +31,9 @@ cMenuGroup menuBase(menuBase, 0);
 cMenuGroup menuProject(menuBase, "Project Settings");
 cMenuGroup menuGeneral(menuBase, "General");
 cMenuGroup menuMidi(menuBase, "MIDI");
+#ifdef TRACKER_MINI
 cMenuGroup menuMidiRemote(menuMidi, "Remote control");
+#endif
 
 cMenuGroup menuUsb(menuBase, "USB");
 
@@ -249,19 +251,19 @@ static const char* const remoteActions[] = {
     "Value -1", "Value +1"
 };
 static const strItemTypeListText remoteEnabledSetup{
-    &mtConfig.midi.remoteEnabled, 2, onOffStateTexts
+    &mtConfig.remote.remoteEnabled, 2, onOffStateTexts
 };
 static const strItemTypeListText remoteProfileSetup{
-    &mtConfig.midi.remoteProfile, 4, remoteProfiles
+    &mtConfig.remote.remoteProfile, 4, remoteProfiles
 };
 static const strItemTypeListText remoteChannelSetup{
-    &mtConfig.midi.remoteChannel, 17, notesChannel
+    &mtConfig.remote.remoteChannel, 17, notesChannel
 };
 static const strItemTypeListText remoteSourceSetup{
-    &mtConfig.midi.remoteSource, 3, remoteSources
+    &mtConfig.remote.remoteSource, 3, remoteSources
 };
 static const strItemTypeListText remoteActionSetup{
-    &mtConfig.midi.remoteLearnAction, kMidiRemoteActionCount, remoteActions
+    &mtConfig.remote.remoteLearnAction, kMidiRemoteActionCount, remoteActions
 };
 static const strItemTypeActionButton remoteCopySetup{
     copyLaunchpadPresetToUserProfile, nullptr

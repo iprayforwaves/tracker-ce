@@ -1,5 +1,6 @@
 #include "mtSequencer.h"
 #include "mtMidiRemote.h"
+#include "mtConfig.h"
 
 #include "configEditor/configEditor.h"
 #include "instrumentEditor/instrumentEditor.h"
@@ -46,8 +47,8 @@ static bool remoteMenuHeld = false;
 void startMidiRemoteLearn()
 {
     // Factory profile is immutable. Select a user slot before learning.
-    remoteLearning = mtConfig.midi.remoteProfile >= 1 &&
-                     mtConfig.midi.remoteProfile <= kMidiRemoteUserProfiles;
+    remoteLearning = mtConfig.remote.remoteProfile >= 1 &&
+                     mtConfig.remote.remoteProfile <= kMidiRemoteUserProfiles;
 }
 void cancelMidiRemoteLearn()
 {
@@ -55,19 +56,19 @@ void cancelMidiRemoteLearn()
 }
 void clearMidiRemoteAssignment()
 {
-    if (mtConfig.midi.remoteProfile < 1 ||
-        mtConfig.midi.remoteProfile > kMidiRemoteUserProfiles)
+    if (mtConfig.remote.remoteProfile < 1 ||
+        mtConfig.remote.remoteProfile > kMidiRemoteUserProfiles)
         return;
-    mtConfig.midi.remoteBindings[mtConfig.midi.remoteProfile - 1]
-                                [mtConfig.midi.remoteLearnAction] = {};
+    mtConfig.remote.remoteBindings[mtConfig.remote.remoteProfile - 1]
+                                [mtConfig.remote.remoteLearnAction] = {};
     saveConfigAsap();
 }
 void copyLaunchpadPresetToUserProfile()
 {
-    if (mtConfig.midi.remoteProfile < 1 ||
-        mtConfig.midi.remoteProfile > kMidiRemoteUserProfiles)
+    if (mtConfig.remote.remoteProfile < 1 ||
+        mtConfig.remote.remoteProfile > kMidiRemoteUserProfiles)
         return;
-    auto& profile = mtConfig.midi.remoteBindings[mtConfig.midi.remoteProfile - 1];
+    auto& profile = mtConfig.remote.remoteBindings[mtConfig.remote.remoteProfile - 1];
     for (uint8_t action = 0; action < kMidiRemoteActionCount; ++action)
     {
         profile[action].type = launchpadXCC[action] ? remoteCC : remoteUnassigned;
@@ -136,14 +137,14 @@ static void dispatchMidiRemoteAction(uint8_t action, bool down)
 bool processMidiRemote(uint8_t source, uint8_t channel, uint8_t type,
                        uint8_t number, uint8_t value)
 {
-    const auto& config = mtConfig.midi;
+    const auto& config = mtConfig.remote;
     if ((config.remoteSource != remoteBoth && config.remoteSource != source) ||
         channel != config.remoteChannel)
         return false;
     if (remoteLearning && value > 0 &&
         (type == remoteCC || type == remoteNote))
     {
-        auto& binding = mtConfig.midi.remoteBindings[config.remoteProfile - 1]
+        auto& binding = mtConfig.remote.remoteBindings[config.remoteProfile - 1]
                                                     [config.remoteLearnAction];
         binding.type = type;
         binding.number = number;

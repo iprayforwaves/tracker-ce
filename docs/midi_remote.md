@@ -34,8 +34,8 @@ its modes or update LEDs through SysEx.
 
 ## Custom controller profiles and MIDI Learn
 
-The Mini saves three user-editable profiles in its standard versioned
-configuration: **Custom 1**, **Custom 2**, **Custom 3**. The built-in
+The Mini saves three user-editable profiles in an append-only, Mini-only
+versioned configuration section: **Custom 1**, **Custom 2**, **Custom 3**. The built-in
 **Launchpad X** profile is read-only.
 
 To customize a controller:
