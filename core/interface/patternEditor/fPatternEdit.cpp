@@ -3120,8 +3120,9 @@ static void functCopyPaste(uint8_t state)
     }
 }
 
- // MIDI Remote's Paste command is equivalent to Shift+Copy in the pattern
- // editor without pretending that the physical Shift key is held.
+#ifdef TRACKER_MINI
+// MIDI Remote's Paste is equivalent to Shift+Copy without pretending that
+// the physical Shift key is held.
 void pastePatternFromMidiRemote()
 {
     if (PTE->fillState > 0 || PTE->editMode != 1)
@@ -3135,6 +3136,7 @@ void pastePatternFromMidiRemote()
     PTE->showPattern(0, false);
     PTE->showLength();
 }
+#endif
 
 static void functDeleteBackspace(uint8_t state)
 {

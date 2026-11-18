@@ -43,12 +43,19 @@ static constexpr uint8_t launchpadXCC[kMidiRemoteActionCount] = {
 };
 static bool remoteLearning = false;
 static bool remoteMenuHeld = false;
+static uint8_t remoteLearnProfile = 0;
+static uint8_t remoteLearnAction = 0;
 
 void startMidiRemoteLearn()
 {
     // Factory profile is immutable. Select a user slot before learning.
     remoteLearning = mtConfig.remote.remoteProfile >= 1 &&
                      mtConfig.remote.remoteProfile <= kMidiRemoteUserProfiles;
+    if (remoteLearning)
+    {
+        remoteLearnProfile = mtConfig.remote.remoteProfile;
+        remoteLearnAction = mtConfig.remote.remoteLearnAction;
+    }
 }
 void cancelMidiRemoteLearn()
 {
@@ -137,20 +144,29 @@ static void dispatchMidiRemoteAction(uint8_t action, bool down)
 bool processMidiRemote(uint8_t source, uint8_t channel, uint8_t type,
                        uint8_t number, uint8_t value)
 {
-    const auto& config = mtConfig.remote;
+    auto& config = mtConfig.remote;
     if ((config.remoteSource != remoteBoth && config.remoteSource != source) ||
         (config.remoteChannel != 0 && channel != config.remoteChannel))
         return false;
-    if (remoteLearning && value > 0 &&
-        (type == remoteCC || type == remoteNote))
+    if (remoteLearning)
     {
-        auto& binding = mtConfig.remote.remoteBindings[config.remoteProfile - 1]
-                                                    [config.remoteLearnAction];
-        binding.type = type;
-        binding.number = number;
-        remoteLearning = false;
-        saveConfigAsap();
-        return true;
+        // A profile or action change while armed must never index slot -1.
+        if (config.remoteProfile != remoteLearnProfile ||
+            config.remoteLearnAction != remoteLearnAction ||
+            remoteLearnProfile == 0 || remoteLearnProfile > kMidiRemoteUserProfiles ||
+            remoteLearnAction >= kMidiRemoteActionCount)
+        {
+            remoteLearning = false;
+        }
+        else if (value > 0 && (type == remoteCC || type == remoteNote))
+        {
+            auto& binding = config.remoteBindings[remoteLearnProfile - 1][remoteLearnAction];
+            binding.type = type;
+            binding.number = number;
+            remoteLearning = false;
+            saveConfigAsap();
+            return true;
+        }
     }
     if (!config.remoteEnabled)
         return false;

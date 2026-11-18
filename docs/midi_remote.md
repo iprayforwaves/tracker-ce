@@ -83,6 +83,11 @@ existing Notes In, CC In, performance, and mixer mappings.
 - CC collision: mapped controls are consumed; other CCs still reach the
   instrument and mixer logic.
 - TRS MIDI remote selection and channel filtering work as configured.
+- Begin MIDI Learn on Custom 1, then switch to Launchpad X and transmit a
+  control: learning cancels without writing out of bounds.
+- Begin MIDI Learn on Custom 1 then change the chosen action; the previous
+  assignment is not overwritten.
+- Original Tracker and Tracker+ still build without Mini-only paste code.
 
 ## Contribution and validation notes
 
