@@ -139,7 +139,7 @@ bool processMidiRemote(uint8_t source, uint8_t channel, uint8_t type,
 {
     const auto& config = mtConfig.remote;
     if ((config.remoteSource != remoteBoth && config.remoteSource != source) ||
-        channel != config.remoteChannel)
+        (config.remoteChannel != 0 && channel != config.remoteChannel))
         return false;
     if (remoteLearning && value > 0 &&
         (type == remoteCC || type == remoteNote))

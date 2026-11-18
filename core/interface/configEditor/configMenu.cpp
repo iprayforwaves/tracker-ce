@@ -238,8 +238,7 @@ cMenuItem melSlaveClockComp(menuMidi,
 
 
 #ifdef TRACKER_MINI
-// Optional MIDI remote input. The Launchpad's pad grid is intentionally not
-// bound here: it remains available for normal note entry.
+// The Launchpad's note grid is deliberately left free for musical input.
 static const char* const remoteProfiles[] = {
     "Launchpad X", "Custom 1", "Custom 2", "Custom 3"
 };
@@ -250,6 +249,7 @@ static const char* const remoteActions[] = {
     "Play", "Stop", "Record", "Pattern", "Song", "Instrument",
     "Value -1", "Value +1"
 };
+
 static const strItemTypeListText remoteEnabledSetup{
     &mtConfig.remote.remoteEnabled, 2, onOffStateTexts
 };
@@ -269,22 +269,54 @@ static const strItemTypeActionButton remoteCopySetup{
     copyLaunchpadPresetToUserProfile, nullptr
 };
 static const strItemTypeActionButton remoteLearnSetup{ startMidiRemoteLearn, nullptr };
-static const strItemTypeActionButton remoteClearSetup{
-    clearMidiRemoteAssignment, nullptr
-};
-static const strItemTypeActionButton remoteCancelLearnSetup{
-    cancelMidiRemoteLearn, nullptr
-};
+static const strItemTypeActionButton remoteClearSetup{ clearMidiRemoteAssignment, nullptr };
+static const strItemTypeActionButton remoteCancelLearnSetup{ cancelMidiRemoteLearn, nullptr };
 
-cMenuItem melRemoteEnabled(menuMidiRemote, "Enabled", "Off leaves all incoming notes and CCs unchanged.", menuTypeItemListText, &remoteEnabledSetup);
-cMenuItem melRemoteProfile(menuMidiRemote, "Profile", "Launchpad X is read-only; Custom 1-3 retain learned bindings.", menuTypeItemListText, &remoteProfileSetup);
-cMenuItem melRemoteSource(menuMidiRemote, "Input", nullptr, menuTypeItemListText, &remoteSourceSetup);
-cMenuItem melRemoteChannel(menuMidiRemote, "Channel", "Remote commands use their own MIDI channel filter.", menuTypeItemListText, &remoteChannelSetup);
-cMenuItem melRemoteAction(menuMidiRemote, "Action to learn", "Select an action, then choose Learn next input.", menuTypeItemListText, &remoteActionSetup);
-cMenuItem melRemoteCopy(menuMidiRemote, "Copy Launchpad preset", "Copies defaults into the selected Custom profile.", menuTypeItemActionButton, &remoteCopySetup);
-cMenuItem melRemoteLearn(menuMidiRemote, "Learn next input", "Select Custom 1-3; press a button on the controller.", menuTypeItemActionButton, &remoteLearnSetup);
-cMenuItem melRemoteClear(menuMidiRemote, "Clear assignment", "Clears the selected action in a Custom profile.", menuTypeItemActionButton, &remoteClearSetup);
-cMenuItem melRemoteCancel(menuMidiRemote, "Cancel MIDI Learn", nullptr, menuTypeItemActionButton, &remoteCancelLearnSetup);
+cMenuItem melRemoteEnabled(menuMidiRemote,
+                           "Enabled",
+                           "Off leaves incoming notes and CCs unchanged.",
+                           menuTypeItemListText,
+                           &remoteEnabledSetup);
+cMenuItem melRemoteProfile(menuMidiRemote,
+                           "Profile",
+                           "Launchpad X is read-only; Custom 1-3 store learned bindings.",
+                           menuTypeItemListText,
+                           &remoteProfileSetup);
+cMenuItem melRemoteSource(menuMidiRemote,
+                          "Input",
+                          nullptr,
+                          menuTypeItemListText,
+                          &remoteSourceSetup);
+cMenuItem melRemoteChannel(menuMidiRemote,
+                           "Channel",
+                           "Remote input channel; All receives commands from any channel.",
+                           menuTypeItemListText,
+                           &remoteChannelSetup);
+cMenuItem melRemoteAction(menuMidiRemote,
+                          "Action to learn",
+                          "Select an action, then choose Learn next input.",
+                          menuTypeItemListText,
+                          &remoteActionSetup);
+cMenuItem melRemoteCopy(menuMidiRemote,
+                        "Copy Launchpad preset",
+                        "Copies the default bindings into the selected Custom profile.",
+                        menuTypeItemActionButton,
+                        &remoteCopySetup);
+cMenuItem melRemoteLearn(menuMidiRemote,
+                         "Learn next input",
+                         "In Custom 1-3, press a button on the controller.",
+                         menuTypeItemActionButton,
+                         &remoteLearnSetup);
+cMenuItem melRemoteClear(menuMidiRemote,
+                         "Clear assignment",
+                         "Clears the selected action in a Custom profile.",
+                         menuTypeItemActionButton,
+                         &remoteClearSetup);
+cMenuItem melRemoteCancel(menuMidiRemote,
+                          "Cancel MIDI Learn",
+                          nullptr,
+                          menuTypeItemActionButton,
+                          &remoteCancelLearnSetup);
 #endif
 
 //==================================================================================================================================================================

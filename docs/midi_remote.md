@@ -47,7 +47,7 @@ To customize a controller:
 5. To remove an assignment, select its action and use
    **Clear assignment**. Use **Cancel MIDI Learn** to disarm learning.
 
-Mappings match the configured **Input** and MIDI **Channel** (1-16).
+Mappings match the configured **Input** and MIDI **Channel** (All or 1-16).
 Only matching messages are consumed. All other note messages continue
 to the existing sequencer and instrument playback handlers. A controller
 with dedicated CC buttons and a note grid can therefore use both
@@ -83,3 +83,44 @@ existing Notes In, CC In, performance, and mixer mappings.
 - CC collision: mapped controls are consumed; other CCs still reach the
   instrument and mixer logic.
 - TRS MIDI remote selection and channel filtering work as configured.
+
+## Contribution and validation notes
+
+**Scope:** One opt-in MIDI remote-control feature, with an onboard UI,
+learnable user profiles, and a Launchpad X factory preset. The existing
+navigation, note-entry, and project workflows remain the defaults.
+
+**Targets:** Mini only for the feature (`PLATFORM=IMX PRODUCT=MINI`).
+Original Tracker (`PLATFORM=MK66 PRODUCT=ORIGINAL`) and Tracker+
+(`PLATFORM=IMX PRODUCT=PLUS`) must still build successfully and retain
+the old configuration layout. The new Mini settings live in an appended
+size-prefixed configuration section rather than shifting existing fields.
+
+**Memory:** The extra persistent configuration is approximately 116 bytes
+on Mini; no large data buffers are introduced. Actual linker headroom in
+`SRAM_DTC`, RAM, and `EXTERNAL_RAM` still requires a full firmware build
+and inspection of the `-print-memory-usage` output.
+
+**Build commands required before upstream submission:**
+
+```sh
+make all
+make ptfx
+```
+
+`make all` includes the `.psyn` synth plugin build. Check all three
+firmware outputs, memory usage, and the reference editor effects build.
+There is an existing `workflow_dispatch` trigger in
+`.github/workflows/build.yml`, which can be manually run against this
+branch on GitHub Actions without opening a pull request.
+
+**Hardware testing status:** No Mini, Tracker+, or Original hardware test
+has been performed for this feature. USB MIDI host enumeration and
+Programmer Mode reception with Launchpad X are particularly important.
+
+**Third-party code:** None added. Launchpad CC mappings are protocol
+constants, not copied third-party source.
+
+**Upstream discussion:** The existing Polyend Backstage request for
+external MIDI control covers the motivation for this feature:
+https://backstage.polyend.com/t/additional-midi-cc-in-controls-external-controller-as-a-full-featured-control-surface/11478

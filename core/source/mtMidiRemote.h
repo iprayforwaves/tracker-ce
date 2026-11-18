@@ -8,15 +8,38 @@
 // through unchanged to the sampler and sequencer.
 enum MidiRemoteAction : uint8_t
 {
-    remoteUp, remoteDown, remoteLeft, remoteRight,
-    remoteSelect, remoteMenu, remoteCopy, remotePaste,
-    remoteInsert, remoteDelete, remotePlay, remoteStop,
-    remoteRecord, remotePattern, remoteSong, remoteInstrument,
-    remoteValueMinus, remoteValuePlus
+    remoteUp,
+    remoteDown,
+    remoteLeft,
+    remoteRight,
+    remoteSelect,
+    remoteMenu,
+    remoteCopy,
+    remotePaste,
+    remoteInsert,
+    remoteDelete,
+    remotePlay,
+    remoteStop,
+    remoteRecord,
+    remotePattern,
+    remoteSong,
+    remoteInstrument,
+    remoteValueMinus,
+    remoteValuePlus
 };
 
-enum MidiRemoteMessage : uint8_t { remoteUnassigned, remoteCC, remoteNote };
-enum MidiRemoteSource : uint8_t { remoteUSB, remoteJack, remoteBoth };
+enum MidiRemoteMessage : uint8_t
+{
+    remoteUnassigned,
+    remoteCC,
+    remoteNote
+};
+enum MidiRemoteSource : uint8_t
+{
+    remoteUSB,
+    remoteJack,
+    remoteBoth
+};
 
 // Returns true if the incoming message was consumed by MIDI remote control.
 bool processMidiRemote(uint8_t source, uint8_t channel, uint8_t type,

@@ -358,7 +358,7 @@ void checkConfig()
     mtConfig.remote.remoteEnabled = mtConfig.remote.remoteEnabled ? 1 : 0;
     if (mtConfig.remote.remoteProfile > kMidiRemoteUserProfiles)
         mtConfig.remote.remoteProfile = 0;
-    if (mtConfig.remote.remoteChannel < 1 || mtConfig.remote.remoteChannel > 16)
+    if (mtConfig.remote.remoteChannel > 16)
         mtConfig.remote.remoteChannel = 1;
     if (mtConfig.remote.remoteSource > 2)
         mtConfig.remote.remoteSource = 0;
