@@ -1099,7 +1099,6 @@ struct strMtConfig
         uint8_t ccInChannel;
         uint8_t middleC;
         uint8_t slaveClockComp;
-
     } midi;
 
     struct strGlobalValues

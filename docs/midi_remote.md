@@ -87,6 +87,8 @@ existing Notes In, CC In, performance, and mixer mappings.
   control: learning cancels without writing out of bounds.
 - Begin MIDI Learn on Custom 1 then change the chosen action; the previous
   assignment is not overwritten.
+- Hold Menu via the controller, disable Remote Control from the physical
+  Mini controls, then release: the menu must not remain stuck open.
 - Original Tracker and Tracker+ still build without Mini-only paste code.
 
 ## Contribution and validation notes

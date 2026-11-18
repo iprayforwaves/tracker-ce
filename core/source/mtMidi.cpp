@@ -169,7 +169,15 @@ bool processMidiRemote(uint8_t source, uint8_t channel, uint8_t type,
         }
     }
     if (!config.remoteEnabled)
+    {
+        // Release a held menu button if remote control is disabled mid-press.
+        if (remoteMenuHeld)
+        {
+            remoteMenuHeld = false;
+            mtInterface.buttonChange(interfaceButtonMiniMenu, buttonRelease);
+        }
         return false;
+    }
 
     for (uint8_t action = 0; action < kMidiRemoteActionCount; ++action)
     {
