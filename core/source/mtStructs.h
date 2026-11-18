@@ -44,7 +44,7 @@ const uint8_t PROJECT_FILE_VERSION = 17;   // wersja struktury pliku projektu
 const uint8_t INSTRUMENT_FILE_VERSION = 9; // wersja struktury pliku instrumentu
 const uint8_t PATTERN_FILE_VERSION = 6;
 
-const uint8_t CONFIG_STRUCT_VER = 10;
+const uint8_t CONFIG_STRUCT_VER = 11;
 
 static constexpr float DEFAULT_TEMPO = 130.0f;
 static constexpr float kMinExternalBPM = 10.0f;
@@ -1026,6 +1026,16 @@ enum NoteDisplayMode
     kNoteDisplayModeDefault = kNoteDisplayOriginal,
 };
 
+// Remote MIDI bindings are deliberately compact: 0=unassigned, 1=CC, 2=note.
+// Three user profiles are stored in the versioned MIDI configuration section.
+static constexpr uint8_t kMidiRemoteActionCount = 18;
+static constexpr uint8_t kMidiRemoteUserProfiles = 3;
+struct MidiRemoteBinding
+{
+    uint8_t type = 0;
+    uint8_t number = 0;
+};
+
 struct strMtConfig
 {
     struct strConfigHeader
@@ -1085,6 +1095,14 @@ struct strMtConfig
         uint8_t ccInChannel;
         uint8_t middleC;
         uint8_t slaveClockComp;
+
+        // Optional MIDI remote control (off by default, to preserve normal MIDI).
+        uint8_t remoteEnabled = 0;
+        uint8_t remoteProfile = 0; // 0: Launchpad X, 1-3: editable slots
+        uint8_t remoteChannel = 1; // 1-16 (separate from Notes/CC In)
+        uint8_t remoteSource = 0; // 0: USB, 1: TRS MIDI, 2: either
+        uint8_t remoteLearnAction = 0;
+        MidiRemoteBinding remoteBindings[kMidiRemoteUserProfiles][kMidiRemoteActionCount] = {};
     } midi;
 
     struct strGlobalValues

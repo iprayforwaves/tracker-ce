@@ -336,6 +336,25 @@ void checkConfig()
     mtConfig.midi.slaveClockComp =
       clamp(mtConfig.midi.slaveClockComp, (uint8_t)0, (uint8_t)kExternalClockCompMaxVal);
 
+    mtConfig.midi.remoteEnabled = mtConfig.midi.remoteEnabled ? 1 : 0;
+    if (mtConfig.midi.remoteProfile > kMidiRemoteUserProfiles)
+        mtConfig.midi.remoteProfile = 0;
+    if (mtConfig.midi.remoteChannel < 1 || mtConfig.midi.remoteChannel > 16)
+        mtConfig.midi.remoteChannel = 1;
+    if (mtConfig.midi.remoteSource > 2)
+        mtConfig.midi.remoteSource = 0;
+    if (mtConfig.midi.remoteLearnAction >= kMidiRemoteActionCount)
+        mtConfig.midi.remoteLearnAction = 0;
+    for (uint8_t profile = 0; profile < kMidiRemoteUserProfiles; ++profile)
+    {
+        for (uint8_t action = 0; action < kMidiRemoteActionCount; ++action)
+        {
+            auto& binding = mtConfig.midi.remoteBindings[profile][action];
+            if (binding.type > 2 || (binding.type != 0 && binding.number > 127))
+                binding = {};
+        }
+    }
+
     // VALUES CHECK  --------------------
     if (mtConfig.values.padsLightBack > 31)
         mtConfig.values.padsLightBack = PADS_LIGHT_BACK_DEFAULT;
@@ -521,6 +540,14 @@ void resetConfig()
     mtConfig.midi.ccInChannel = 0;
     mtConfig.midi.middleC = 2;
     mtConfig.midi.slaveClockComp = kExternalClockCompDefaultVal;
+    mtConfig.midi.remoteEnabled = 0;
+    mtConfig.midi.remoteProfile = 0;
+    mtConfig.midi.remoteChannel = 1;
+    mtConfig.midi.remoteSource = 0;
+    mtConfig.midi.remoteLearnAction = 0;
+    for (auto& profile : mtConfig.midi.remoteBindings)
+        for (auto& binding : profile)
+            binding = {};
 
     // values ----------------------------------------
     mtConfig.values.padsLightBack = PADS_LIGHT_BACK_DEFAULT;
